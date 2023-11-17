@@ -6,6 +6,9 @@
   "scripts": {
     "devStart": "nodemon server.js"
   },
+  "devServer": {
+    "historyApiFallback": true
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

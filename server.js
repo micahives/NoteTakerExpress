@@ -3,15 +3,13 @@ const path = require('path');
 const notesData = require('./Develop/db/db.json');
 const uuid = require('./Develop/helpers/uuid.js');
 
-// more research on this env object
 const PORT = process.env.PORT || 3001;
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(express.static('public'));
+app.use(express.static('/public'));
 
 // GET route for homepage (HTML route)
 app.get('/', (req, res) =>
