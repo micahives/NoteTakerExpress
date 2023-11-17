@@ -9,7 +9,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('/public'));
+// middleware for static files
+app.use('/', express.static(path.join(__dirname, './Develop/public')));
 
 // GET route for homepage (HTML route)
 app.get('/', (req, res) =>
@@ -20,6 +21,11 @@ app.get('/', (req, res) =>
 app.get('/notes', (req, res) =>
     res.sendFile(path.join(__dirname, './Develop/public/notes.html'))
 );
+
+// GET route for stylesheet
+app.get('/assets/css/styles.css', (req, res) => {
+    res.sendFile(path.join(__dirname, './Develop/public/assets/css/styles.css'));
+});
 
 // GET route for db.json (API route) to store saved notes
 app.get('/api/notes', (req, res) =>
