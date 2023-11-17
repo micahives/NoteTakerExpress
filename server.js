@@ -22,11 +22,6 @@ app.get('/notes', (req, res) =>
     res.sendFile(path.join(__dirname, './Develop/public/notes.html'))
 );
 
-// GET route for stylesheet
-app.get('/assets/css/styles.css', (req, res) => {
-    res.sendFile(path.join(__dirname, './Develop/public/assets/css/styles.css'));
-});
-
 // GET route for db.json (API route) to store saved notes
 app.get('/api/notes', (req, res) =>
     res.json(notesData)
@@ -41,10 +36,11 @@ app.post('/api/notes', (req, res) => {
         const { title, text } = req.body;
 
         if (title && text) {
+
             const newNote = {
                 title,
                 text,
-                note_id: uuid(),
+                id: uuid(),
             };
 
             const response = {
