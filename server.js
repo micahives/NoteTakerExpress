@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 // I may not want to require this as it keeps changing, and loads...
 // the cached version if you require changes
-const notesData = require('./Develop/db/db.json');
+// const notesData = require('./Develop/db/db.json');
 const uuid = require('./Develop/helpers/uuid.js');
 const fs = require('fs');
 
@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+// function to read and parse json file
 function jsonReader(filePath, cb) {
     fs.readFile(filePath, 'utf-8', (err, fileData) => {
         if (err) {
@@ -98,5 +99,47 @@ app.post('/api/notes', (req, res) => {
             res.status(500).json('Error in posting note');
         }
 });
+
+app.delete('/api/notes/:id', (req, res) => {
+    // Get the note id from the request parameters
+    const idToDelete = req.params.id;
+
+    jsonReader('./Develop/db/db.json', (err, data) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ error: 'Error deleting note' });
+        } else {
+            // Find the index of the note with the given id
+            const index = data.findIndex(note => note.id === idToDelete);
+
+            if (index !== -1) {
+                // Remove the note from the array if it is found in the data array
+                data.splice(index, 1);
+
+                const updatedDataString = JSON.stringify(data, null, 2);
+                fs.writeFile('./Develop/db/db.json', updatedDataString, err => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).json({ error: 'Error deleting note' });
+                    } else {
+                        console.log('Note deleted successfully');
+
+                        const response = {
+                            status: 'success',
+                            message: 'Note deleted successfully',
+                        };
+
+                        console.log(response);
+                        res.status(200).json(response);
+                    }
+                });
+            } else {
+                // If the note with the given id is not found, return an error
+                res.status(404).json({ error: 'Note not found' });
+            }
+        }
+    });
+});
+
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
