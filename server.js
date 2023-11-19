@@ -41,7 +41,14 @@ app.get('/notes', (req, res) =>
 
 // GET route for db.json (API route) to store saved notes
 app.get('/api/notes', (req, res) =>
-    res.json(notesData)
+    jsonReader('./Develop/db/db.json', (err, data) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ error: 'Error reading notes' });
+        } else {
+            res.json(data);
+        }
+    })
 );
 
 // POST route for save new note and return updated db.json (API route)
